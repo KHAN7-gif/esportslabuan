@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Esports Labuan — Athlete Dashboard</title>
+<style>
+:root{--bg:#eef3f8;--panel:#ffffff66;--panel2:#ffffff82;--line:#ffffffb8;--text:#152033;--muted:#6d7889;--pink:#ff2d8d;--purple:#7c5cff;--cyan:#25a9e0;--green:#22a06b;--gold:#d99700;--red:#e34d6f;--shadow:0 18px 50px #62748a22}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#ffffff 0,#eaf1f8 34%,#dfe8f1 70%,#f6f8fb 100%);color:var(--text);font:14px -apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit}.app{display:flex;min-height:100vh}.sidebar{width:260px;background:#ffffff66;border-right:1px solid #ffffffc7;backdrop-filter:blur(28px) saturate(150%);-webkit-backdrop-filter:blur(28px) saturate(150%);padding:22px 16px;position:fixed;inset:0 auto 0 0;z-index:5;box-shadow:8px 0 35px #65758a14}.brand{display:flex;align-items:center;gap:12px;padding:5px 8px 25px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--pink),var(--purple));display:grid;place-items:center;font-weight:900;font-size:18px;color:#fff;box-shadow:0 10px 24px #7c5cff35}.brand b{font-size:17px}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.nav-title{color:#9aa5b4;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;margin:18px 10px 8px}.nav a{display:flex;align-items:center;gap:12px;padding:12px 12px;margin:4px 0;border-radius:12px;color:#667184;text-decoration:none;cursor:pointer}.nav a.active,.nav a:hover{background:#ffffff99;border:1px solid #ffffffaa;color:#172033;box-shadow:0 8px 20px #71809618}.nav .ico{width:22px;text-align:center}.side-footer{position:absolute;bottom:18px;left:24px;right:24px;color:#8792a2;font-size:10px;line-height:1.5}
+main{margin-left:260px;width:calc(100% - 260px);padding:25px 30px 40px}.top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:25px}.eyebrow{color:var(--pink);font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase}.title{font-size:27px;font-weight:800;margin:5px 0}.sub{color:var(--muted)}.actions{display:flex;gap:9px}.btn{border:1px solid #ffffffc7;background:#ffffff88;color:#263248;padding:10px 14px;border-radius:10px;cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--pink),var(--purple));border:0;color:#fff;font-weight:700;box-shadow:0 10px 24px #7c5cff35}.btn:hover{filter:brightness(1.12)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:linear-gradient(145deg,#ffffffa8,#ffffff5e);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%)}.stat{display:flex;justify-content:space-between}.stat .icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:#ffffff09;font-size:18px}.label{color:var(--muted);font-size:12px}.num{font-size:28px;font-weight:850;margin-top:7px}.delta{font-size:11px;margin-top:7px;color:var(--green)}.pink{color:var(--pink)}.gold{color:var(--gold)}.cyan{color:var(--cyan)}.green{color:var(--green)}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:14px}.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.card-head h3{margin:0;font-size:15px}.mini{color:var(--muted);font-size:11px}.bars{height:210px;display:flex;align-items:end;gap:12px;padding:10px 5px}.bar{flex:1;position:relative;height:100%;display:flex;align-items:end}.bar i{display:block;width:100%;height:var(--h);border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,var(--pink),var(--purple));box-shadow:0 0 20px #ff2da633}.bar span{position:absolute;bottom:-22px;width:100%;text-align:center;color:var(--muted);font-size:10px}.activity{display:flex;flex-direction:column;gap:11px}.act{display:flex;gap:11px;padding:11px;border:1px solid #ffffffaa;border-radius:12px;background:#ffffff55}.avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#ffffff,#dce5ef);display:grid;place-items:center;font-weight:800;color:#45536a;box-shadow:inset 0 1px #fff}.act b{font-size:12px}.act small{display:block;color:var(--muted);margin-top:3px}
+.section{margin-top:22px}.toolbar{display:flex;gap:9px;justify-content:space-between;margin-bottom:12px}.tools{display:flex;gap:8px}.input,.select{background:#ffffff91;border:1px solid #ffffffc7;color:#263248;border-radius:9px;padding:10px 12px;outline:none}.input{min-width:250px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:13px 12px;border-bottom:1px solid #ffffffaa;text-align:left;white-space:nowrap}.table th{color:#71798b;font-size:10px;text-transform:uppercase;letter-spacing:1px}.table td{font-size:12px}.ath{display:flex;align-items:center;gap:10px}.ath .avatar{width:34px;height:34px}.badge{padding:5px 8px;border-radius:99px;font-size:10px;font-weight:700;background:#ffffff80;border:1px solid #ffffffaa}.bgreen{color:var(--green);background:#34d39914}.bpink{color:var(--pink);background:#ff2da614}.bgold{color:var(--gold);background:#fbbf2414}
+.page{display:none}.page.active{display:block}.empty{padding:40px;text-align:center;color:var(--muted)}
+.modal{display:none;position:fixed;inset:0;background:#000a;backdrop-filter:blur(7px);z-index:20;place-items:center;padding:20px}.modal.show{display:grid}.modal-box{width:min(560px,100%);background:#ffffffd9;border:1px solid #ffffffee;border-radius:18px;padding:22px;box-shadow:0 30px 90px #000}.modal-box h2{margin:0 0 18px}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted)}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+@media(max-width:1000px){.sidebar{width:78px}.brand div,.nav a span,.nav-title,.side-footer{display:none}.brand{justify-content:center}.nav a{justify-content:center}.sidebar+.x{}main{margin-left:78px;width:calc(100% - 78px)}.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:650px){main{padding:18px 14px}.top{align-items:flex-start}.actions .btn:not(.primary){display:none}.cards{grid-template-columns:1fr 1fr}.title{font-size:22px}.toolbar{flex-direction:column}.tools{width:100%}.input{min-width:0;width:100%}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid #ffffffb8;background:#ffffff70;color:#667184;padding:9px 13px;border-radius:999px;cursor:pointer}.tab.active{background:#ffffffc7;color:#172033;box-shadow:0 8px 20px #71809618;font-weight:700}.game-card{cursor:pointer}.game-card:hover{transform:translateY(-2px)}.game-name{font-size:17px;font-weight:800}.game-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.profile-btn{border:1px solid #ffffffc7;background:#ffffff80;border-radius:9px;padding:7px 9px;cursor:pointer}.profile-btn.featured{color:var(--gold);font-weight:700}.note{padding:12px;border-radius:12px;background:#ffffff55;border:1px solid #ffffffaa;color:var(--muted);font-size:12px}
+.burger{display:none;width:42px;height:42px;border:1px solid #ffffffc7;background:#ffffff88;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:12px;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 20px #71809618;color:#172033;font-size:21px}
+.burger span,.burger span:before,.burger span:after{display:block;width:19px;height:2px;background:#172033;border-radius:4px;content:"";position:relative;transition:.2s}
+.burger span:before{position:absolute;top:-6px}.burger span:after{position:absolute;top:6px}
+.mobile-overlay{display:none;position:fixed;inset:0;background:#15203325;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:4}
+.sidebar.open{transform:translateX(0)}
+@media(max-width:1000px){
+ .burger{display:flex;position:fixed;top:14px;left:14px;z-index:7}
+ .sidebar{width:260px;transform:translateX(-105%);transition:transform .25s ease;box-shadow:14px 0 40px #65758a28}
+ .brand div,.nav a span,.nav-title,.side-footer{display:block}
+ .brand{justify-content:flex-start}
+ .nav a{justify-content:flex-start}
+ main{margin-left:0;width:100%;padding-top:70px}
+ .mobile-overlay.open{display:block}
+}
+@media(min-width:1001px){.sidebar{transform:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">EL</div><div><b>ESPORTS LABUAN</b><span>ATHLETE DATABASE</span></div></div>
+  <div class="nav-title">MAIN</div>
+  <nav class="nav">
+    <a class="active" data-page="dashboard"><span class="ico">⌂</span><span>Dashboard</span></a>
+    <a data-page="athletes"><span class="ico">👤</span><span>Atlet</span></a>
+    <a data-page="featured"><span class="ico">⭐</span><span>Atlet Berprofil Tinggi</span></a>
+    <a data-page="tournaments"><span class="ico">🎮</span><span>Kejohanan</span></a>
+    <a data-page="achievements"><span class="ico">🏆</span><span>Pencapaian</span></a>
+    <a data-page="games"><span class="ico">🎮</span><span>GAME</span></a>
+    <a data-page="analytics"><span class="ico">📊</span><span>Statistik</span></a>
+  </nav>
+  <div class="nav-title">SYSTEM</div>
+  <nav class="nav"><a data-page="settings"><span class="ico">⚙</span><span>Settings</span></a></nav>
+  <div class="side-footer">LOCAL MODE • Firebase belum disambungkan<br>Designed & Developed by MAIDA ESPORTS LAB © 2026</div>
+</aside>
+
+<button class="burger" id="burgerBtn" aria-label="Buka menu" aria-expanded="false"><span></span></button><div class="mobile-overlay" id="mobileOverlay"></div>
+<main>
+<div id="dashboard" class="page active">
+  <div class="top"><div><div class="eyebrow">ESPORTS LABUAN</div><div class="title">Esports Labuan Database Dashboard</div><div class="sub">Pusat database untuk merekod, mengurus dan mengukur perkembangan Esports Labuan.</div></div><div class="actions"><button class="btn" onclick="exportData()">Export JSON</button><button class="btn primary" onclick="openModal()">+ Tambah Atlet</button></div></div>
+  <div class="cards">
+    <div class="card"><div class="stat"><div><div class="label">JUMLAH ATLET</div><div class="num" id="sAth">0</div><div class="delta">● Data aktif</div></div><div class="icon pink">♙</div></div></div>
+    <div class="card"><div class="stat"><div><div class="label">PENYERTAAN</div><div class="num" id="sParticipation">0</div><div class="delta">🎮 Semua penyertaan direkod</div></div><div class="icon cyan">🎮</div></div></div>
+    <div class="card"><div class="stat"><div><div class="label">PENCAPAIAN</div><div class="num" id="sAch">0</div><div class="delta">↑ Rekod kompetitif</div></div><div class="icon gold">🏆</div></div></div>
+    <div class="card"><div class="stat"><div><div class="label">GAME</div><div class="num" id="sGames">0</div><div class="delta">● Jenis game pernah disertai</div></div><div class="icon cyan">🎮</div></div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="card-head"><h3>Pencapaian Mengikut Tahun</h3><span class="mini">LOCAL DATA</span></div><div class="bars" id="bars"></div></div>
+    <div class="card"><div class="card-head"><h3>Aktiviti Terkini</h3><span class="mini">LIVE</span></div><div class="activity" id="activity"></div></div>
+  </div>
+</div>
+
+<div id="games" class="page">
+ <div class="top"><div><div class="eyebrow">GAME DATABASE</div><div class="title">🎮 GAME</div><div class="sub">Menunjukkan jenis game yang pernah disertai atlet Esports Labuan.</div></div><button class="btn primary" onclick="openGameModal()">+ Tambah Game</button></div>
+ <div class="cards" id="gameCards"></div>
+ <div class="section"><div class="card">
+   <div class="card-head"><h3>Jenis Game & Keterlibatan</h3><span class="mini">DATABASE</span></div>
+   <div class="table-wrap"><table class="table"><thead><tr><th>Game</th><th>Atlet</th><th>Penyertaan</th><th>Pencapaian</th><th>Tahap Tertinggi</th></tr></thead><tbody id="gameDetailTable"></tbody></table></div>
+ </div></div>
+</div>
+
+<div id="featured" class="page">
+ <div class="top"><div><div class="eyebrow">FEATURED ATHLETES</div><div class="title">⭐ Atlet Berprofil Tinggi</div><div class="sub">Atlet utama yang ditonjolkan daripada database Atlet. Data tidak diduplikasi.</div></div></div>
+ <div class="cards">
+   <div class="card"><div class="label">ATLET PROFIL TINGGI</div><div class="num" id="featuredCount">0</div><div class="mini">Dipilih daripada database Atlet</div></div>
+   <div class="card"><div class="label">PENCAPAIAN MEREKA</div><div class="num" id="featuredAch">0</div><div class="mini">Jumlah rekod pencapaian</div></div>
+   <div class="card"><div class="label">GAME</div><div class="num" id="featuredGames">0</div><div class="mini">Game yang diwakili</div></div>
+   <div class="card"><div class="label">STATUS AKTIF</div><div class="num" id="featuredActive">0</div><div class="mini">Atlet masih aktif</div></div>
+ </div>
+ <div class="section"><div class="card">
+  <div class="card-head"><h3>Senarai Atlet Berprofil Tinggi</h3><span class="mini">DATA DARIPADA ATLET</span></div>
+  <div class="table-wrap"><table class="table"><thead><tr><th>Atlet</th><th>Game</th><th>Team</th><th>Status</th><th>Pencapaian</th><th>Profil</th></tr></thead><tbody id="featuredTable"></tbody></table></div>
+ </div></div>
+</div>
+
+<div id="athletes" class="page">
+ <div class="top"><div><div class="eyebrow">DATABASE</div><div class="title">Athlete Database</div><div class="sub">Urus profil atlet tanpa sambungan cloud.</div></div><button class="btn primary" onclick="openModal()">+ Tambah Atlet</button></div>
+ <div class="card"><div class="toolbar"><div class="tools"><input id="search" class="input" placeholder="Cari nama, ID, team..." oninput="renderAthletes()"><select id="gameFilter" class="select" onchange="renderAthletes()"><option value="">Semua Game</option></select></div><span class="mini" id="count"></span></div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Atlet</th><th>Game</th><th>Team</th><th>Status</th><th>Pencapaian</th><th>Profil</th><th></th></tr></thead><tbody id="athTable"></tbody></table></div></div>
+ <div class="section"><div class="card"><div class="card-head"><h3>Sejarah Penyertaan Atlet</h3><span class="mini">RUJUKAN</span></div>
+  <div class="toolbar"><div class="tools"><select id="profileAthleteFilter" class="select" onchange="renderAthleteHistory()"><option value="">Pilih Atlet</option></select></div></div>
+  <div class="table-wrap"><table class="table"><thead><tr><th>Tahun</th><th>Kejohanan</th><th>Game</th><th>Tahap</th><th>Kategori</th><th>Kedudukan</th><th>Medal</th></tr></thead><tbody id="athHistoryTable"></tbody></table></div>
+ </div></div>
+</div>
+
+<div id="achievements" class="page">
+ <div class="top"><div><div class="eyebrow">RECORDS</div><div class="title">Pencapaian Atlet</div><div class="sub">Rekod prestasi kompetitif berdasarkan tahap kejohanan.</div></div></div>
+ <div class="cards">
+  <div class="card"><div class="label">T1 · ANTARABANGSA</div><div class="num" id="t1Count">0</div><div class="mini">Sukan SEA</div></div>
+  <div class="card"><div class="label">T2 · KEBANGSAAN</div><div class="num" id="t2Count">0</div><div class="mini">SUKMA</div></div>
+  <div class="card"><div class="label">T3 · NEGERI</div><div class="num" id="t3Count">0</div><div class="mini">Kejohanan Negeri</div></div>
+  <div class="card"><div class="label">PENYERTAAN</div><div class="num" id="participationCount">0</div><div class="mini">Semua rekod</div></div>
+ </div>
+ <div class="section"><div class="card">
+  <div class="toolbar"><div class="tools"><select id="tierFilter" class="select" onchange="renderAchievements()"><option value="">Semua Tahap</option><option value="T1">T1 · Antarabangsa</option><option value="T2">T2 · Kebangsaan</option><option value="T3">T3 · Negeri</option></select></div></div>
+  <div class="table-wrap"><table class="table"><thead><tr><th>Atlet</th><th>Kejohanan</th><th>Game</th><th>Tahun</th><th>Tahap</th><th>Kedudukan</th><th>Medal</th></tr></thead><tbody id="achTable"></tbody></table></div>
+ </div></div>
+</div>
+
+<div id="tournaments" class="page">
+ <div class="top"><div><div class="eyebrow">COMPETITIONS</div><div class="title">Tournament Database</div><div class="sub">Senarai pertandingan yang direkodkan dalam sistem.</div></div></div>
+ <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Kejohanan</th><th>Tarikh</th><th>Game</th><th>Venue</th><th>Status</th></tr></thead><tbody id="tourTable"></tbody></table></div></div>
+</div>
+
+<div id="analytics" class="page"><div class="top"><div><div class="eyebrow">INSIGHTS</div><div class="title">Analytics</div><div class="sub">Ringkasan prestasi berdasarkan data tempatan.</div></div></div><div class="cards"><div class="card"><div class="label">ATLET TERBAIK</div><div class="num" id="bestAth">—</div></div><div class="card"><div class="label">GAME TERBANYAK</div><div class="num" id="bestGame">—</div></div><div class="card"><div class="label">TEAM TERBANYAK</div><div class="num" id="bestTeam">—</div></div><div class="card"><div class="label">MEDAL KESELURUHAN</div><div class="num" id="medalAll">0</div></div></div></div>
+<div id="settings" class="page"><div class="top"><div><div class="eyebrow">SYSTEM</div><div class="title">Settings</div><div class="sub">Konfigurasi asas dashboard.</div></div></div><div class="card"><h3>Storage Mode</h3><p class="sub">Data sekarang disimpan di LocalStorage browser. Firebase belum disambungkan.</p><button class="btn" onclick="clearData()">Reset Local Data</button></div></div>
+</main></div>
+
+<div class="modal" id="gameModal"><div class="modal-box"><h2>Tambah Game</h2><div class="form">
+<div class="field full"><label>NAMA GAME</label><input id="fGameName" class="input" placeholder="Contoh: Valorant"></div>
+</div><div class="modal-actions"><button class="btn" onclick="closeGameModal()">Batal</button><button class="btn primary" onclick="saveGame()">Simpan Game</button></div></div></div>
+
+<div class="modal" id="modal"><div class="modal-box"><h2>Tambah Atlet</h2><div class="form">
+<div class="field"><label>NAMA ATLET</label><input id="fName" class="input" placeholder="Nama penuh"></div>
+<div class="field"><label>ID ATLET</label><input id="fId" class="input" placeholder="EL-001"></div>
+<div class="field"><label>GAME</label><input id="fGame" class="input" placeholder="PUBG Mobile"></div>
+<div class="field"><label>TEAM / ORGANISASI</label><input id="fTeam" class="input" placeholder="Nama team"></div>
+<div class="field"><label>STATUS</label><select id="fStatus" class="select"><option>Aktif</option><option>Tidak Aktif</option></select></div>
+<div class="field"><label>PROFIL TINGGI</label><select id="fFeatured" class="select"><option value="false">☆ Atlet Biasa</option><option value="true">⭐ Utamakan Atlet</option></select></div>
+</div><div class="modal-actions"><button class="btn" onclick="closeModal()">Batal</button><button class="btn primary" onclick="saveAthlete()">Simpan Atlet</button></div></div></div>
+
+<script>
+const TITLE_GAMES = ['PUBG Mobile - Berkumpulan', 'MLBB - Berkumpulan', 'MLBB - Berkumpulan Lelaki', 'MLBB - Berkumpulan Wanita', 'Tekken 7 - Solo', 'eFootball Mobile - Solo', 'eFootball Konsol - Solo', 'eFootball Konsol - Duo', 'Grand Torismo 7', 'FC - Solo', 'FC - Dou'];
+
+const seed={gameTitles:TITLE_GAMES,
+athletes:[
+{id:"EL-001",name:"Aiman Hakim",game:"PUBG Mobile",team:"Labuan Warriors",status:"Aktif",featured:true},
+{id:"EL-002",name:"Muhammad Danish",game:"Mobile Legends",team:"Labuan Esports",status:"Aktif",featured:true},
+{id:"EL-003",name:"Nur Aisyah",game:"eFootball",team:"MAIDA Esports",status:"Aktif",featured:false},
+{id:"EL-004",name:"Adam Firdaus",game:"PUBG Mobile",team:"Borneo Titans",status:"Aktif",featured:false},
+{id:"EL-005",name:"Syafiq Rahman",game:"Free Fire",team:"Labuan Squad",status:"Aktif",featured:false}],
+achievements:[
+{ath:"Aiman Hakim",tour:"Sukan SEA",game:"PUBG Mobile",year:2026,tier:"T1",category:"Antarabangsa",pos:1,medal:"Gold"},
+{ath:"Aiman Hakim",tour:"Labuan Esports Championship",game:"PUBG Mobile",year:2026,tier:"T3",category:"Negeri",pos:1,medal:"Gold"},
+{ath:"Muhammad Danish",tour:"SUKMA",game:"Mobile Legends",year:2026,tier:"T2",category:"Kebangsaan",pos:2,medal:"Silver"},
+{ath:"Muhammad Danish",tour:"Labuan Mobile Cup",game:"Mobile Legends",year:2026,tier:"T3",category:"Negeri",pos:2,medal:"Silver"},
+{ath:"Nur Aisyah",tour:"WP Labuan eFootball Open",game:"eFootball",year:2025,tier:"T3",category:"Negeri",pos:1,medal:"Gold"},
+{ath:"Adam Firdaus",tour:"Borneo Esports Championship",game:"PUBG Mobile",year:2026,tier:"T3",category:"Negeri",pos:3,medal:"Bronze"},
+{ath:"Aiman Hakim",tour:"Sabah-Labuan Invitational",game:"PUBG Mobile",year:2025,tier:"T3",category:"Negeri",pos:2,medal:"Silver"},
+{ath:"Aiman Hakim",tour:"NADI Community Cup",game:"PUBG Mobile",year:2025,tier:"",category:"NADI",pos:"Peserta",medal:"—"}],
+tournaments:[
+{tour:"Sukan SEA",date:"2026",game:"PUBG Mobile",venue:"Antarabangsa",status:"Selesai",tier:"T1",category:"Antarabangsa"},
+{tour:"SUKMA",date:"2026",game:"Mobile Legends",venue:"Malaysia",status:"Selesai",tier:"T2",category:"Kebangsaan"},
+{tour:"Labuan Esports Championship 2026",date:"2026-08-15",game:"PUBG Mobile",venue:"Labuan",status:"Selesai",tier:"T3",category:"Negeri"},
+{tour:"Labuan Mobile Cup 2026",date:"2026-07-20",game:"Mobile Legends",venue:"Labuan",status:"Selesai",tier:"T3",category:"Negeri"},
+{tour:"WP Labuan eFootball Open 2025",date:"2025-11-09",game:"eFootball",venue:"Labuan",status:"Selesai",tier:"T3",category:"Negeri"},
+{tour:"NADI Community Cup",date:"2025",game:"PUBG Mobile",venue:"Labuan",status:"Selesai",tier:"",category:"NADI"}]};
+let db=JSON.parse(localStorage.getItem("el_dashboard"))||seed;
+db.gameTitles=[...new Set([...(db.gameTitles||[]),...TITLE_GAMES])];
+function persist(){localStorage.setItem("el_dashboard",JSON.stringify(db))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+document.querySelectorAll(".nav a").forEach(a=>a.onclick=()=>{document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));a.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(a.dataset.page).classList.add("active");if(a.dataset.page==="athletes")renderAthletes();if(a.dataset.page==="featured")renderFeatured();if(a.dataset.page==="games")renderGames()});
+function render(){
+document.getElementById("sParticipation").textContent=(db.achievements||[]).length;
+  document.getElementById("sAth").textContent=db.athletes.length;document.getElementById("sAch").textContent=db.achievements.length;document.getElementById("sGold").textContent=db.achievements.filter(x=>x.medal==="Gold").length;document.getElementById("sGames").textContent=new Set(db.athletes.map(x=>x.game)).size;
+let years=[2024,2025,2026];let vals=years.map(y=>db.achievements.filter(x=>+x.year===y).length),max=Math.max(1,...vals);document.getElementById("bars").innerHTML=years.map((y,i)=>`<div class="bar"><i style="--h:${Math.max(12,vals[i]/max*90)}%"></i><span>${y}<br>${vals[i]}</span></div>`).join("");
+document.getElementById("activity").innerHTML=db.achievements.slice(-4).reverse().map(x=>`<div class="act"><div class="avatar">${esc(x.ath[0])}</div><div><b>${esc(x.ath)}</b><small>${esc(x.tour)} • ${esc(x.medal)}</small></div></div>`).join("")||'<div class="empty">Belum ada aktiviti.</div>';
+renderAthletes();renderAchievements();renderTournaments();renderAnalytics();renderGames();renderFeatured();
+}
+function renderAthletes(){
+let q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("gameFilter")?.value||"";
+let games=[...new Set(db.athletes.filter(x=>x.name!=="—").map(x=>x.game))];if(document.getElementById("gameFilter"))document.getElementById("gameFilter").innerHTML='<option value="">Semua Game</option>'+games.map(x=>`<option ${x===g?"selected":""}>${esc(x)}</option>`).join("");
+let arr=db.athletes.filter(x=>x.name!=="—"&&(!q||Object.values(x).join(" ").toLowerCase().includes(q))&&(!g||x.game===g));document.getElementById("count").textContent=arr.length+" atlet";
+let pa=document.getElementById("profileAthleteFilter"),pv=pa?.value||"";if(pa)pa.innerHTML='<option value="">Pilih Atlet</option>'+db.athletes.filter(x=>x.name!=="—").map(x=>`<option ${x.name===pv?"selected":""}>${esc(x.name)}</option>`).join("");
+document.getElementById("athTable").innerHTML=arr.map((x,i)=>{let n=db.achievements.filter(a=>a.ath===x.name).length;return `<tr><td><div class="ath"><div class="avatar">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small class="mini">${esc(x.id)}</small></div></div></td><td>${esc(x.game)}</td><td>${esc(x.team)}</td><td><span class="badge bgreen">${esc(x.status)}</span></td><td>${n}</td><td><button class="btn" onclick="removeAthlete('${esc(x.id)}')">Delete</button></td></tr>`}).join("")||'<tr><td colspan="6"><div class="empty">Tiada atlet ditemui.</div></td></tr>';
+}
+function renderAchievements(){
+ let f=document.getElementById("tierFilter")?.value||"", rows=db.achievements.filter(a=>!f||a.tier===f);
+ document.getElementById("t1Count").textContent=db.achievements.filter(a=>a.tier==="T1").length;
+ document.getElementById("t2Count").textContent=db.achievements.filter(a=>a.tier==="T2").length;
+ document.getElementById("t3Count").textContent=db.achievements.filter(a=>a.tier==="T3").length;
+ document.getElementById("participationCount").textContent=db.achievements.length;
+ document.getElementById("achTable").innerHTML=rows.map(x=>`<tr><td><b>${esc(x.ath)}</b></td><td>${esc(x.tour)}</td><td>${esc(x.game)}</td><td>${esc(x.year)}</td><td>${x.tier?`<span class="badge bpink">${x.tier}</span>`:"—"}</td><td>${esc(x.pos)}</td><td><span class="badge ${x.medal==="Gold"?"bgold":x.medal==="Silver"?"bpink":"bgreen"}">${esc(x.medal)}</span></td></tr>`).join("")||'<tr><td colspan="7"><div class="empty">Tiada rekod.</div></td></tr>'
+}
+function renderTournaments(){document.getElementById("tourTable").innerHTML=db.tournaments.map(x=>`<tr><td><b>${esc(x.tour)}</b></td><td>${esc(x.date)}</td><td>${esc(x.game)}</td><td>${esc(x.venue)}</td><td><span class="badge bgreen">${esc(x.status)}</span></td></tr>`).join("")}
+function renderAnalytics(){let cnt=a=>Object.entries(a.reduce((o,x)=>(o[x]=(o[x]||0)+1,o),{})).sort((a,b)=>b[1]-a[1])[0]?.[0]||"—";document.getElementById("bestAth").textContent=cnt(db.achievements.map(x=>x.ath));document.getElementById("bestGame").textContent=cnt(db.athletes.filter(x=>x.name!=="—").map(x=>x.game));document.getElementById("bestTeam").textContent=cnt(db.athletes.filter(x=>x.name!=="—").map(x=>x.team));document.getElementById("medalAll").textContent=db.achievements.length}
+function openModal(){document.getElementById("modal").classList.add("show");document.getElementById("fName").focus()}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function saveAthlete(){let name=fName.value.trim();if(!name)return alert("Sila masukkan nama atlet.");db.athletes.push({id:fId.value.trim()||"EL-"+String(db.athletes.length+1).padStart(3,"0"),name,game:fGame.value.trim()||"Belum ditetapkan",team:fTeam.value.trim()||"Independent",status:fStatus.value});persist();["fName","fId","fGame","fTeam"].forEach(id=>document.getElementById(id).value="");closeModal();render()}
+function removeAthlete(id){if(confirm("Padam atlet ini?")){db.athletes=db.athletes.filter(x=>x.id!==id);persist();render()}}
+function clearData(){if(confirm("Reset semua data local kepada data demo?")){localStorage.removeItem("el_dashboard");db=JSON.parse(JSON.stringify(seed));render()}}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="esports-labuan-data.json";a.click();URL.revokeObjectURL(a.href)}
+
+function openGameModal(){document.getElementById("gameModal").classList.add("show");document.getElementById("fGameName").focus()}
+function closeGameModal(){document.getElementById("gameModal").classList.remove("show")}
+function saveGame(){let n=document.getElementById("fGameName").value.trim();if(!n)return alert("Sila masukkan nama game.");if(!db.athletes.some(a=>a.game.toLowerCase()===n.toLowerCase())){db.athletes.push({id:"GAME-"+Date.now(),name:"—",game:n,team:"—",status:"Game"});persist();}closeGameModal();render()}
+
+function safeFeatured(a){ return a.featured === true || a.featured === "true"; }
+function participationRecords(){
+  return (data.achievements || []).length + 0;
+}
+function athleteParticipationCount(name, game){
+  return (db.achievements||[]).filter(x=>x.ath===name && (!game||x.game===game)).length;
+}
+function achievementCountFor(name, game){
+  return (db.achievements||[]).filter(x=>x.ath===name && (!game||x.game===game) && ["T1","T2","T3"].includes(x.tier)).length;
+}
+function setFeatured(id){
+  const a=(db.athletes||[]).find(x=>x.id===id);
+  if(!a) return;
+  a.featured=!safeFeatured(a);
+  persist();
+  renderAll();
+}
+function renderFeatured(){
+  const list=(db.athletes||[]).filter(safeFeatured);
+  const ach=(db.achievements||[]).filter(x=>list.some(a=>a.name===x.ath));
+  document.getElementById("featuredCount").textContent=list.length;
+  document.getElementById("featuredAch").textContent=ach.length;
+  document.getElementById("featuredGames").textContent=new Set(list.map(a=>a.game)).size;
+  document.getElementById("featuredActive").textContent=list.filter(a=>a.status==="Aktif").length;
+  const tb=document.getElementById("featuredTable");
+  tb.innerHTML=list.length?list.map(a=>{
+    const c=achievementCountFor(a.name);
+    return `<tr><td><div class="ath"><div class="avatar">${a.name.split(" ").map(x=>x[0]).slice(0,2).join("")}</div><div><b>${a.name}</b><small>${a.id}</small></div></div></td><td>${a.game}</td><td>${a.team}</td><td><span class="badge bgreen">${a.status}</span></td><td>${c}</td><td><button class="profile-btn featured" onclick="setFeatured('${a.id}')">⭐ Utamakan</button></td></tr>`;
+  }).join(""):'<tr><td colspan="6" class="empty">Belum ada atlet berprofil tinggi. Pilih ⭐ pada tab Atlet.</td></tr>';
+}
+
+function renderGames(){
+  const existing=[...(db.athletes||[]).map(a=>a.game),...(db.achievements||[]).map(a=>a.game)].filter(Boolean);
+  const games=[...new Set([...(db.gameTitles||[]), ...TITLE_GAMES, ...existing])];
+  db.gameTitles=games;
+  document.getElementById("sGames").textContent=games.length;
+  document.getElementById("gameCards").innerHTML=games.map(g=>{
+    const ac=(db.athletes||[]).filter(a=>a.game===g).length;
+    const pc=(db.achievements||[]).filter(a=>a.game===g).length;
+    return `<div class="card game-card"><div class="game-name">🎮 ${esc(g)}</div><div class="game-meta"><span class="badge">${ac} Atlet</span><span class="badge">${pc} Penyertaan</span><span class="badge bgold">${achievementCountForGame(g)} Pencapaian</span></div></div>`;
+  }).join("");
+  document.getElementById("gameDetailTable").innerHTML=games.map(g=>{
+    const ac=(db.athletes||[]).filter(a=>a.game===g).length;
+    const pc=(db.achievements||[]).filter(a=>a.game===g).length;
+    const tiers=(db.achievements||[]).filter(a=>a.game===g && a.tier).map(a=>a.tier);
+    const highest=tiers.includes("T1")?"T1 · Antarabangsa":tiers.includes("T2")?"T2 · Kebangsaan":tiers.includes("T3")?"T3 · Negeri":"—";
+    return `<tr><td><b>🎮 ${esc(g)}</b></td><td>${ac}</td><td>${pc}</td><td>${achievementCountForGame(g)}</td><td>${highest}</td></tr>`;
+  }).join("");
+}
+function achievementCountForGame(g){return (db.achievements||[]).filter(a=>a.game===g && ["T1","T2","T3"].includes(a.tier)).length}
+>
