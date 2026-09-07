@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Esports Labuan — Athlete Database</title>
+<style>
+:root{
+  --bg:#f5f7fb;--card:#fff;--text:#101828;--muted:#667085;
+  --line:#e4e7ec;--soft:#eef2f6;--accent:#111827;--danger:#ef4444;
+  --green:#12b76a;--shadow:0 2px 10px rgba(16,24,40,.04)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh;width:100%}
+.sidebar{
+  width:280px;height:100vh;background:#fff;border-right:1px solid var(--line);
+  padding:18px 14px;position:sticky;top:0;overflow-y:auto;z-index:30
+}
+.brand{font-weight:800;font-size:18px;padding:8px 12px 22px;line-height:1.35}
+.brand span{font-size:23px}.brand small{font-size:12px}
+.nav button{
+  display:block;width:100%;border:0;background:transparent;text-align:left;
+  padding:13px 12px;border-radius:11px;margin:3px 0;font-size:14px;color:#475467;
+  transition:.15s
+}
+.nav button.active,.nav button:hover{background:var(--soft);color:#101828;font-weight:700}
+.main{min-width:0;width:100%;display:flex;flex-direction:column}
+.top{
+  min-height:70px;background:#fff;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:0 30px;position:sticky;top:0;z-index:20
+}
+.top strong{font-size:16px;white-space:nowrap}
+.search{border:1px solid var(--line);border-radius:12px;padding:11px 14px;width:min(360px,42vw);outline:none;background:#fff}
+.search:focus{border-color:#98a2b3;box-shadow:0 0 0 3px #f2f4f7}
+.content{padding:32px;max-width:1500px;margin:0 auto;width:100%;min-width:0}
+.title h1{margin:0;font-size:30px;line-height:1.2;letter-spacing:-.4px}
+.title p{color:var(--muted);margin:8px 0 24px;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.stat small{color:var(--muted);display:block;font-size:12px}
+.stat b{font-size:29px;display:block;margin-top:8px}
+.grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,1fr);gap:18px;margin-top:18px}
+.section-title{font-weight:800;margin-bottom:14px}
+.bar{margin:14px 0}.bar label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.track{height:8px;background:var(--soft);border-radius:20px;overflow:hidden}
+.fill{height:100%;background:#111827;border-radius:20px}
+.athlete{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+.avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;background:var(--soft);display:grid;place-items:center}
+.pill{display:inline-block;background:var(--soft);padding:5px 9px;border-radius:99px;font-size:11px;margin:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;transition:.15s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn.primary{background:#111827;color:#fff;border-color:#111827}
+.btn.danger{color:var(--danger);border-color:#fecaca}
+.btn.small{padding:7px 10px;font-size:12px}
+.row-actions{display:flex;gap:7px;flex-wrap:wrap;white-space:nowrap}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:14px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:13px;color:#667085;white-space:nowrap}
+td{font-size:14px}
+.muted{color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:30px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.game h3{margin:0 0 5px}.game p{min-height:20px}
+.notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:12px 14px;border-radius:12px;margin-bottom:18px;font-size:13px;overflow-wrap:anywhere}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:15px}
+.toolbar input,.toolbar select,.actions input,.actions select{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;min-height:40px}
+.modal{position:fixed;inset:0;background:rgba(16,24,40,.48);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modal.show{display:flex}
+.modal-box{background:#fff;border-radius:18px;width:min(760px,100%);max-height:90vh;overflow:auto;box-shadow:0 25px 70px rgba(0,0,0,.18)}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:2}
+.modal-head h2{margin:0;font-size:19px}.close{border:0;background:transparent;font-size:25px}
+.form{padding:20px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;min-height:42px}
+.field textarea{min-height:90px;resize:vertical}.full{grid-column:1/-1}
+.modal-actions{padding:15px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:#fff}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px}
+.choice.selected{background:#111827;color:#fff;border-color:#111827}
+.mobile-nav{display:none}
+
+@media(max-width:1100px){
+  .app{grid-template-columns:235px minmax(0,1fr)}
+  .sidebar{width:235px}
+  .content{padding:24px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .app{display:block}
+  .sidebar{display:none}
+  .main{width:100%;min-height:100vh}
+  .top{min-height:62px;padding:0 14px;gap:10px}
+  .top strong{font-size:14px}
+  .search{width:min(220px,55vw);padding:9px 11px}
+  .content{padding:20px 14px 88px}
+  .title h1{font-size:25px}
+  .title p{font-size:14px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .stat{padding:15px}.stat b{font-size:24px}
+  .grid{grid-template-columns:1fr;gap:12px}
+  .cards{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .modal{padding:10px}
+  .modal-box{max-height:94vh;border-radius:14px}
+  .mobile-nav{
+    position:fixed;display:flex;bottom:0;left:0;right:0;height:68px;
+    background:#fff;border-top:1px solid var(--line);z-index:90;
+    overflow-x:auto;box-shadow:0 -3px 14px rgba(16,24,40,.06)
+  }
+  .mobile-nav button{
+    flex:0 0 auto;min-width:72px;border:0;background:#fff;
+    padding:8px 10px;font-size:11px;color:#667085
+  }
+  .mobile-nav button.active{color:#111827;font-weight:800}
+  .table-wrap table{min-width:1050px}
+}
+@media(max-width:430px){
+  .top strong{font-size:13px}.search{width:52vw}
+  .stats{grid-template-columns:1fr 1fr}
+  .content{padding-left:12px;padding-right:12px}
+  .actions{gap:7px}
+  .actions .btn,.actions select{width:100%}
+  .modal-actions{flex-direction:column}
+  .modal-actions .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">🏆 <span>Esports Labuan</span><br><small class="muted">Athlete Database • 2026</small></div>
+  <nav class="nav">
+    <button onclick="show('dashboard',this)" class="active">🏠 Dashboard</button>
+    <button onclick="show('athletes',this)">👤 Atlet</button>
+    <button onclick="show('coaches',this)">🎯 Jurulatih</button>
+    <button onclick="show('management',this)">👥 Pengurusan</button>
+    <button onclick="show('elite',this)">⭐ Atlet Elit</button>
+    <button onclick="show('games',this)">🎮 Games</button>
+    <button onclick="show('achievements',this)">🏆 Pencapaian</button>
+    <button onclick="show('analytics',this)">📊 Analisis</button>
+    <button onclick="show('settings',this)">⚙️ Settings</button>
+  </nav>
+</aside>
+<main class="main">
+<header class="top"><strong>⚡ Athlete Database</strong><input id="globalSearch" class="search" placeholder="🔍 Cari nama, IC, game..."></header>
+
+<section id="dashboard" class="content">
+<div class="title"><h1>Database Pencapaian Atlet Esports Labuan</h1><p>Data peserta, atlet, jurulatih, pengurusan, game dan pencapaian.</p></div>
+<div class="notice">📥 Data asas daripada Excel <b>ESPORTS_BIMP-EAGA_2026_PROFESSIONAL_UI.xlsx</b> telah dimasukkan. Gunakan <b>Settings → Import Excel</b> untuk menggantikan / menggabungkan data daripada fail Excel baharu.</div>
+<div class="stats">
+<div class="stat"><small>👤 ATLET</small><b id="statAthletes">0</b></div><div class="stat"><small>🎯 JURULATIH</small><b id="statCoaches">0</b></div><div class="stat"><small>👥 PENGURUSAN</small><b id="statManagement">0</b></div><div class="stat"><small>🎮 GAME</small><b id="statGames">0</b></div>
+</div>
+<div class="grid">
+<div class="card"><div class="section-title">🎮 Game digunakan</div><div id="dashboardGames"></div></div>
+<div class="card"><div class="section-title">⭐ Atlet Elit</div><div id="dashboardElite"></div></div>
+</div>
+</section>
+
+<section id="athletes" class="content" style="display:none">
+<div class="title"><h1>👤 Atlet</h1><p>Semua atlet daripada database.</p></div>
+<div class="actions"><button class="btn primary" onclick="openAthlete()">＋ Tambah Atlet</button><select id="athleteGameFilter" onchange="renderAthletes()"><option value="">Semua Game</option></select><select id="athleteStatusFilter" onchange="renderAthletes()"><option value="">Semua Status</option><option>🟢 Aktif</option><option>🟡 Tidak Aktif</option><option>⚪ Alumni</option></select></div>
+<div class="card table-wrap"><table><thead><tr><th>Atlet</th><th>No. KP</th><th>Tarikh Lahir</th><th>Umur</th><th>Game</th><th>Status</th><th>Pro</th><th>Tindakan</th></tr></thead><tbody id="athleteTableBody"></tbody></table></div>
+</section>
+
+<section id="coaches" class="content" style="display:none">
+<div class="title"><h1>🎯 Jurulatih</h1><p>Struktur jurulatih mengikut game.</p></div>
+<div class="actions"><button class="btn primary" onclick="openPerson('coach')">＋ Tambah Jurulatih</button></div>
+<div class="card table-wrap"><table><thead><tr><th>Jawatan</th><th>Nama</th><th>No. KP</th><th>Game</th><th>Email</th><th>Telefon</th><th>Status</th><th>Tindakan</th></tr></thead><tbody id="coachTableBody"></tbody></table></div>
+</section>
+
+<section id="management" class="content" style="display:none">
+<div class="title"><h1>👥 Pengurusan</h1><p>Pengurus dan struktur pengurusan pasukan.</p></div>
+<div class="actions"><button class="btn primary" onclick="openPerson('management')">＋ Tambah Pengurusan</button></div>
+<div class="card table-wrap"><table><thead><tr><th>Jawatan</th><th>Nama</th><th>No. KP</th><th>Email</th><th>Telefon</th><th>Organisasi</th><th>Status</th><th>Tindakan</th></tr></thead><tbody id="managementTableBody"></tbody></table></div>
+</section>
+
+<section id="elite" class="content" style="display:none"><div class="title"><h1>⭐ Atlet Elit</h1><p>Atlet yang ditetapkan sebagai Pro Atlet.</p></div><div id="eliteCards" class="cards"></div></section>
+
+<section id="games" class="content" style="display:none"><div class="title"><h1>🎮 Games</h1><p>Senarai game dan kategori.</p></div><div class="actions"><button class="btn primary" onclick="openGame()">＋ Tambah Game</button></div><div id="gameCards" class="cards"></div></section>
+
+<section id="achievements" class="content" style="display:none">
+<div class="title"><h1>🏆 Pencapaian</h1><p>Rekod pencapaian atlet.</p></div>
+<div class="actions"><button class="btn primary" onclick="openAchievement()">＋ Rekod Pencapaian</button><select id="qualFilter" onchange="renderAchievements()"><option value="">Semua Kelayakan</option><option>🌐 ANTARABANGSA</option><option>🏳️ NEGERI</option><option>📍 DAERAH</option><option>🏢 KELAB/PERSATUAN</option><option>👥 KOMUNITI</option></select><select id="rankFilter" onchange="renderAchievements()"><option value="">Semua Kedudukan</option><option>🥇 Johan</option><option>🥈 Naib Johan</option><option>🥉 Tempat Ketiga</option><option>4️⃣ Top 4</option><option>8️⃣ Top 8</option><option>1️⃣6️⃣ Top 16</option><option>🏅 Penyertaan</option></select></div>
+<div class="card table-wrap"><table><thead><tr><th>Atlet</th><th>Game</th><th>Kelayakan</th><th>Kedudukan</th><th>Tahun</th><th>Nama Pertandingan</th><th>Tindakan</th></tr></thead><tbody id="achievementTableBody"></tbody></table></div>
+</section>
+
+<section id="analytics" class="content" style="display:none"><div class="title"><h1>📊 Analisis</h1><p>Ringkasan berdasarkan data semasa.</p></div><div class="stats"><div class="stat"><small>🥇 JOHAN</small><b id="aGold">0</b></div><div class="stat"><small>🥈 NAIB JOHAN</small><b id="aSilver">0</b></div><div class="stat"><small>🥉 TEMPAT KETIGA</small><b id="aBronze">0</b></div><div class="stat"><small>🏅 PENYERTAAN</small><b id="aEntries">0</b></div></div><div class="card" style="margin-top:18px"><div class="section-title">Pencapaian mengikut kelayakan</div><div id="qualBars"></div></div></section>
+
+<section id="settings" class="content" style="display:none">
+<div class="title"><h1>⚙️ Settings</h1><p>Pengurusan data dan konfigurasi sistem.</p></div>
+<div class="grid">
+<div class="card"><div class="section-title">📥 Import Excel</div><p class="muted">Import kolum: NO, NOTE/JAWATAN, JENIS ESUKAN, NAMA PENUH, EMAIL, NO KP, UMUR 2026, NO TELEFON, SEKOLAH/IPTA/IPTS, ALAMAT, IGN, ID, SAIZ BAJU, SAIZ SELUAR, STATUS DATA.</p><input id="excelFile" type="file" accept=".xlsx,.xls,.csv"><div style="margin-top:12px"><button class="btn primary" onclick="importExcel()">Import & Simpan</button></div><p class="muted" style="font-size:12px;margin-top:10px">Import akan menggabungkan data berdasarkan No. KP; rekod kosong tidak akan dimasukkan.</p></div>
+<div class="card"><div class="section-title">🔗 Status Google Sheets</div><p id="apiStatus" class="muted">Semak sambungan...</p><button class="btn" onclick="syncFromGoogle()">🔄 Sync Sekarang</button></div><div class="card"><div class="section-title">💾 Backup</div><button class="btn" onclick="exportJSON()">Export JSON</button> <button class="btn danger" onclick="clearAll()">Padam semua data</button><p class="muted" style="font-size:12px;margin-top:12px">Delete dalam tab menggunakan pengesahan sebelum rekod dipadam.</p></div>
+</div>
+</section>
+</main></div>
+
+<div class="mobile-nav">
+<button onclick="show('dashboard',this)" class="active">🏠<br>Home</button>
+<button onclick="show('athletes',this)">👤<br>Atlet</button>
+<button onclick="show('coaches',this)">🎯<br>Jurulatih</button>
+<button onclick="show('management',this)">👥<br>Pengurusan</button>
+<button onclick="show('elite',this)">⭐<br>Elit</button>
+<button onclick="show('games',this)">🎮<br>Games</button>
+<button onclick="show('achievements',this)">🏆<br>Awards</button>
+<button onclick="show('analytics',this)">📊<br>Analisis</button>
+<button onclick="show('settings',this)">⚙️<br>Settings</button>
+</div>
+
+<div id="modal" class="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle"></h2><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const KEY='esportsLabuanDB_v3';
+/*
+ GOOGLE SHEETS API
+ Selepas Google Apps Script dideploy sebagai Web App, tampal URL /exec di sini.
+ Contoh: https://script.google.com/macros/s/XXXXXXXX/exec
+*/
+const GOOGLE_SHEETS_API='https://script.google.com/macros/s/AKfycbwcr7BOximtf_S0-68AjWzJ4yUtI_pBwFj_Gly4kfQJiVGBgU7r6ji3KmTV2L5TkCtTjQ/exec';
+const defaultData={
+ athletes:[
+ {id:'ATH-00001',name:'Ahmad Ralf Rayyan Bin Salim',nickname:'Ahmad Ralf Rayyan',ic:'100517-12-1461',games:['Tekken 7'],status:'🟢 Aktif',pro:'Ya — Pro Atlet',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'},
+ {id:'ATH-00002',name:'Mohammad Nur Izzudin Bin Mohd Rozlan',ic:'080506-08-0603',games:['MLBB'],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'},
+ {id:'ATH-00003',name:'Arieq Elwan Bin Maruhan',ic:'081004-15-0071',games:['MLBB'],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'},
+ {id:'ATH-00004',name:'Muhammad Noor Sarifudin Bin Mohamed Kifli',ic:'081027-08-0213',games:['MLBB'],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'},
+ {id:'ATH-00005',name:'Muhd Dani Iman Bin Mud Safree',ic:'101206-15-0067',games:['MLBB'],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'},
+ {id:'ATH-00006',name:'Hakim Lim Chia An',ic:'081020-15-0047',games:['MLBB'],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'},
+ {id:'ATH-00007',name:'Ahmed Danish Muzaffar Bin Ahmad Nawati',ic:'080102-15-0011',games:['MLBB'],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email:'',phone:'',school:'',address:'',ign:'',shirt:'',pants:'',dataStatus:'SEMAKAN'}
+ ],
+ coaches:[
+ {id:'COA-00001',role:'JURULATIH 1',name:'MOHD. RIZAL BIN USIN',ic:'800416-12-5161',game:'Tekken',email:'rizal.usin@pl.gov.my',phone:'0195830299',school:'Perbadanan Labuan',status:'LENGKAP'},
+ {id:'COA-00002',role:'JURULATIH 2',name:'ADAM ARAFAT BIN LAHAJI',ic:'041113-15-0103',game:'MLBB',email:'adamarafat2004@gmail.com',phone:'0168393220',school:'University Malaysia Sabah',status:'LENGKAP'},
+ {id:'COA-00003',role:'JURULATIH 3',name:'',ic:'',game:'MLBB',email:'',phone:'',school:'',status:'SEMAKAN'}
+ ],
+ management:[
+ {id:'MGT-00001',role:'PENGURUS',name:'AKBAR KHAN BIN ABDUL MALIK',ic:'830311-12-5197',email:'apengtakahahsi@gmail.com',phone:'0146771717',school:'Perbadanan Labuan',status:'SEMAKAN'}
+ ],
+ games:[
+ {id:'g1',name:'PUBG Mobile',category:'Berkumpulan',icon:'🎯'},{id:'g2',name:'MLBB',category:'Berkumpulan · Lelaki · Wanita',icon:'⚔️'},{id:'g3',name:'Tekken 7',category:'Solo',icon:'🥊'},{id:'g4',name:'eFootball Mobile',category:'Solo',icon:'🎮'},{id:'g5',name:'eFootball Konsol',category:'Solo · Duo',icon:'🎮'},{id:'g6',name:'Gran Turismo 7',category:'Solo',icon:'🏎️'},{id:'g7',name:'FC',category:'Solo · Duo',icon:'⚽'}
+ ],
+ achievements:[
+ {id:'ACH-00001',athlete:'Ahmad Ralf Rayyan Bin Salim',game:'Tekken 7 · Solo',qual:'🌐 Antarabangsa',rank:'🥇 Johan',year:2026,event:'',note:''}
+ ]};
+let db=loadLocal();
+function loadLocal(){try{const x=JSON.parse(localStorage.getItem(KEY));return x?x:structuredClone(defaultData)}catch(e){return structuredClone(defaultData)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function apiReady(){return GOOGLE_SHEETS_API && !GOOGLE_SHEETS_API.includes('PASTE_APPS_SCRIPT')}\nfunction updateApiStatus(){const e=document.getElementById('apiStatus');if(e)e.textContent=apiReady()?'🟢 URL Apps Script telah ditetapkan':'🟠 Belum disambungkan — tampal URL /exec Apps Script dalam index.html';}
+async function apiRequest(action,payload={}){
+ if(!apiReady()) return null;
+ try{
+   const qs=new URLSearchParams({action,...payload});
+   if(action==='list'){
+     const r=await fetch(GOOGLE_SHEETS_API+'?'+qs.toString(),{method:'GET'});
+     return await r.json();
+   }
+   const r=await fetch(GOOGLE_SHEETS_API,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:qs.toString()});
+   return await r.json();
+ }catch(e){console.error('Google Sheets API:',e);return null}
+}
+function applyRemoteData(x){
+ if(!x||!x.ok||!x.data)return false;
+ db=x.data; save(); renderAll(); return true;
+}
+async function syncFromGoogle(){
+ if(!apiReady()) return;
+ const x=await apiRequest('list');
+ if(applyRemoteData(x)) toast('Database Google Sheets disegerakkan');
+}
+async function syncMutation(action,payload){
+ save(); renderAll();
+ if(!apiReady()) return;
+ const x=await apiRequest(action,payload);
+ if(x && x.ok){
+   if(x.data) applyRemoteData(x);
+   toast('Google Sheets dikemas kini');
+ }else if(x){
+   toast('Perubahan disimpan di browser, tetapi Google Sheets gagal dikemas kini');
+ }else{
+   toast('Perubahan disimpan di browser. Sambungan Google Sheets belum tersedia');
+ }
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function fmtIC(v){let d=String(v||'').replace(/\D/g,'');return d.length===12?d.slice(0,6)+'-'+d.slice(6,8)+'-'+d.slice(8):d}
+function calcDobAge(ic){let d=String(ic||'').replace(/\D/g,'');if(d.length!==12)return{dob:'',age:''};let yy=+d.slice(0,2),mm=+d.slice(2,4),dd=+d.slice(4,6),now=new Date(),year=2000+yy;if(year>now.getFullYear())year-=100;let dt=new Date(year,mm-1,dd);if(dt.getFullYear()!=year||dt.getMonth()!=mm-1||dt.getDate()!=dd)return{dob:'',age:''};let age=now.getFullYear()-year;if(now.getMonth()<mm-1||(now.getMonth()==mm-1&&now.getDate()<dd))age--;return{dob:`${year}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`,age}}
+function nextId(prefix,list){return prefix+String(list.length+1).padStart(5,'0')}
+function show(id,btn){document.querySelectorAll('.content').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.nav button,.mobile-nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll(`[onclick*="'${id}'"]`).forEach(x=>x.classList.add('active'));renderAll();window.scrollTo(0,0)}
+function openModal(title,body){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function toast(msg){alert(msg)}
+function openAthlete(id=''){let a=id?db.athletes.find(x=>x.id===id):{};openModal(id?'✏️ Edit Atlet':'＋ Tambah Atlet',`
+<div class="form"><div class="form-grid">
+<div class="field"><label>Nama Penuh</label><input id="fName" value="${esc(a.name)}"></div>
+<div class="field"><label>Nickname / IGN</label><input id="fNick" value="${esc(a.nickname||a.ign)}"></div>
+<div class="field"><label>No. Kad Pengenalan</label><input id="fIc" inputmode="numeric" maxlength="14" value="${esc(fmtIC(a.ic))}" oninput="liveIC()" placeholder="YYMMDD-SS-NNNG"></div>
+<div class="field"><label>Tarikh Lahir (auto)</label><input id="fDob" type="date" readonly value="${calcDobAge(a.ic).dob}"></div>
+<div class="field"><label>Umur (auto)</label><input id="fAge" readonly value="${calcDobAge(a.ic).age}"></div>
+<div class="field"><label>Jantina</label><select id="fGender"><option ${a.gender==='Lelaki'?'selected':''}>Lelaki</option><option ${a.gender==='Wanita'?'selected':''}>Wanita</option></select></div>
+<div class="field"><label>Status</label><select id="fStatus"><option ${a.status==='🟢 Aktif'?'selected':''}>🟢 Aktif</option><option ${a.status==='🟡 Tidak Aktif'?'selected':''}>🟡 Tidak Aktif</option><option ${a.status==='⚪ Alumni'?'selected':''}>⚪ Alumni</option></select></div>
+<div class="field"><label>Pro Atlet</label><select id="fPro"><option ${a.pro==='Tidak'?'selected':''}>Tidak</option><option ${a.pro==='Ya — Pro Atlet'?'selected':''}>Ya — Pro Atlet</option></select></div>
+<div class="field"><label>Email</label><input id="fEmail" value="${esc(a.email)}"></div><div class="field"><label>No. Telefon</label><input id="fPhone" value="${esc(a.phone)}"></div>
+<div class="field"><label>Sekolah / IPTA / IPTS</label><input id="fSchool" value="${esc(a.school)}"></div><div class="field"><label>Alamat</label><input id="fAddress" value="${esc(a.address)}"></div>
+<div class="field"><label>Saiz Baju</label><input id="fShirt" value="${esc(a.shirt)}"></div><div class="field"><label>Saiz Seluar</label><input id="fPants" value="${esc(a.pants)}"></div>
+<div class="field full"><label>Game Atlet — boleh pilih lebih daripada 1</label><div class="choices" id="gameChoices">${db.games.map(g=>`<button type="button" class="choice ${(a.games||[]).includes(g.name)?'selected':''}" data-game="${esc(g.name)}" onclick="this.classList.toggle('selected')">${g.icon||'🎮'} ${esc(g.name)}</button>`).join('')}</div></div>
+</div></div><div class="modal-actions"><button class="btn" onclick="closeModal()">Batal</button><button class="btn primary" onclick="saveAthlete('${id}')">💾 Simpan</button></div>`)}
+function liveIC(){let el=document.getElementById('fIc'),raw=el.value.replace(/\D/g,'').slice(0,12);el.value=fmtIC(raw);let x=calcDobAge(raw);document.getElementById('fDob').value=x.dob;document.getElementById('fAge').value=x.age}
+function saveAthlete(id){let ic=document.getElementById('fIc').value.replace(/\D/g,'');let x=calcDobAge(ic);if(!document.getElementById('fName').value.trim()||!x.dob){toast('Sila masukkan nama dan No. KP yang sah');return}if(db.athletes.some(a=>a.ic===ic&&a.id!==id)){toast('No. KP sudah didaftarkan');return}let obj={id:id||nextId('ATH-',db.athletes),name:document.getElementById('fName').value.trim(),nickname:document.getElementById('fNick').value.trim(),ic:fmtIC(ic),dob:x.dob,age:x.age,gender:document.getElementById('fGender').value,status:document.getElementById('fStatus').value,pro:document.getElementById('fPro').value,email:document.getElementById('fEmail').value.trim(),phone:document.getElementById('fPhone').value.trim(),school:document.getElementById('fSchool').value.trim(),address:document.getElementById('fAddress').value.trim(),shirt:document.getElementById('fShirt').value.trim(),pants:document.getElementById('fPants').value.trim(),games:[...document.querySelectorAll('#gameChoices .selected')].map(x=>x.dataset.game),dataStatus:'LENGKAP'};db.athletes=id?db.athletes.map(a=>a.id===id?obj:a):[...db.athletes,obj];closeModal();syncMutation('upsert',{type:'athlete',record:JSON.stringify(obj)});}
+function confirmDelete(type,id){if(!confirm('Adakah anda pasti mahu memadam rekod ini?'))return;if(type==='athlete')db.athletes=db.athletes.filter(x=>x.id!==id);if(type==='coach')db.coaches=db.coaches.filter(x=>x.id!==id);if(type==='management')db.management=db.management.filter(x=>x.id!==id);if(type==='game')db.games=db.games.filter(x=>x.id!==id);if(type==='achievement')db.achievements=db.achievements.filter(x=>x.id!==id);syncMutation('delete',{type,id});}
+function renderAthletes(){let body=document.getElementById('athleteTableBody');if(!body)return;let gf=document.getElementById('athleteGameFilter'),sf=document.getElementById('athleteStatusFilter');let games=[...new Set(db.athletes.flatMap(a=>a.games||[]))];gf.innerHTML='<option value="">Semua Game</option>'+games.map(g=>`<option ${gf.value===g?'selected':''}>${esc(g)}</option>`).join('');let rows=db.athletes.filter(a=>(!gf.value||(a.games||[]).includes(gf.value))&&(!sf.value||a.status===sf.value));body.innerHTML=rows.map(a=>{let z=calcDobAge(a.ic);return `<tr><td><b>${esc(a.name)}</b>${a.nickname?`<br><span class="muted">${esc(a.nickname)}</span>`:''}<br><span class="muted">${a.id}</span></td><td>${esc(fmtIC(a.ic))}</td><td>${z.dob?z.dob.split('-').reverse().join('/'): '-'}</td><td>${z.age}</td><td>${(a.games||[]).map(esc).join(' · ')}</td><td><span class="pill">${esc(a.status)}</span></td><td>${a.pro==='Ya — Pro Atlet'?'<span class="pill">🏅 Pro</span>':'—'}</td><td><div class="row-actions"><button class="btn small" onclick="openAthlete('${a.id}')">Edit</button><button class="btn small danger" onclick="confirmDelete('athlete','${a.id}')">Delete</button></div></td></tr>`}).join('')||'<tr><td colspan="8" class="empty">Tiada rekod.</td></tr>'}
+function openPerson(type,id=''){let arr=type==='coach'?db.coaches:db.management,a=id?arr.find(x=>x.id===id):{};openModal(id?'✏️ Edit '+(type==='coach'?'Jurulatih':'Pengurusan'):'＋ Tambah '+(type==='coach'?'Jurulatih':'Pengurusan'),`<div class="form"><div class="form-grid"><div class="field"><label>Jawatan</label><input id="pRole" value="${esc(a.role)}"></div><div class="field"><label>Nama</label><input id="pName" value="${esc(a.name)}"></div><div class="field"><label>No. KP</label><input id="pIc" value="${esc(a.ic)}"></div>${type==='coach'?'<div class="field"><label>Game</label><input id="pGame" value="'+esc(a.game)+'"></div>':''}<div class="field"><label>Email</label><input id="pEmail" value="${esc(a.email)}"></div><div class="field"><label>No. Telefon</label><input id="pPhone" value="${esc(a.phone)}"></div><div class="field"><label>Organisasi / Sekolah</label><input id="pSchool" value="${esc(a.school)}"></div><div class="field"><label>Status</label><select id="pStatus"><option ${a.status==='LENGKAP'?'selected':''}>LENGKAP</option><option ${a.status==='SEMAKAN'?'selected':''}>SEMAKAN</option></select></div></div></div><div class="modal-actions"><button class="btn" onclick="closeModal()">Batal</button><button class="btn primary" onclick="savePerson('${type}','${id}')">💾 Simpan</button></div>`)}
+function savePerson(type,id){let arr=type==='coach'?db.coaches:db.management,obj={id:id||nextId(type==='coach'?'COA-':'MGT-',arr),role:document.getElementById('pRole').value.trim(),name:document.getElementById('pName').value.trim(),ic:document.getElementById('pIc').value.trim(),email:document.getElementById('pEmail').value.trim(),phone:document.getElementById('pPhone').value.trim(),school:document.getElementById('pSchool').value.trim(),status:document.getElementById('pStatus').value};if(type==='coach')obj.game=document.getElementById('pGame').value.trim();if(id)arr=arr.map(x=>x.id===id?obj:x);else arr.push(obj);if(type==='coach')db.coaches=arr;else db.management=arr;closeModal();syncMutation('upsert',{type,record:JSON.stringify(obj)});}
+function renderPeople(type){let body=document.getElementById(type==='coach'?'coachTableBody':'managementTableBody'),arr=type==='coach'?db.coaches:db.management;if(!body)return;body.innerHTML=arr.map(a=>`<tr><td>${esc(a.role)}</td><td><b>${esc(a.name||'BELUM DIISI')}</b></td><td>${esc(a.ic||'-')}</td>${type==='coach'?`<td>${esc(a.game||'-')}</td>`:''}<td>${esc(a.email||'-')}</td><td>${esc(a.phone||'-')}</td>${type==='management'?`<td>${esc(a.school||'-')}</td>`:''}<td><span class="pill">${esc(a.status||'SEMAKAN')}</span></td><td><div class="row-actions"><button class="btn small" onclick="openPerson('${type}','${a.id}')">Edit</button><button class="btn small danger" onclick="confirmDelete('${type}','${a.id}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="8" class="empty">Tiada rekod.</td></tr>'}
+function openGame(id=''){let g=id?db.games.find(x=>x.id===id):{};openModal(id?'✏️ Edit Game':'＋ Tambah Game',`<div class="form"><div class="form-grid"><div class="field"><label>Nama Game</label><input id="gName" value="${esc(g.name)}"></div><div class="field"><label>Kategori</label><input id="gCat" value="${esc(g.category)}"></div><div class="field"><label>Icon</label><input id="gIcon" value="${esc(g.icon||'🎮')}"></div></div></div><div class="modal-actions"><button class="btn" onclick="closeModal()">Batal</button><button class="btn primary" onclick="saveGame('${id}')">💾 Simpan</button></div>`)}
+function saveGame(id){let obj={id:id||'g'+Date.now(),name:document.getElementById('gName').value.trim(),category:document.getElementById('gCat').value.trim(),icon:document.getElementById('gIcon').value.trim()||'🎮'};if(!obj.name)return toast('Masukkan nama game');db.games=id?db.games.map(x=>x.id===id?obj:x):[...db.games,obj];closeModal();syncMutation('upsert',{type:'game',record:JSON.stringify(obj)});}
+function renderGames(){let el=document.getElementById('gameCards');if(!el)return;el.innerHTML=db.games.map(g=>`<div class="card game"><h3>${g.icon||'🎮'} ${esc(g.name)}</h3><p class="muted">${esc(g.category)}</p><div class="row-actions"><button class="btn small" onclick="openGame('${g.id}')">Edit</button><button class="btn small danger" onclick="confirmDelete('game','${g.id}')">Delete</button></div></div>`).join('')||'<div class="card empty">Tiada game.</div>'}
+function openAchievement(id=''){let a=id?db.achievements.find(x=>x.id===id):{};openModal(id?'✏️ Edit Pencapaian':'🏆 Rekod Pencapaian',`<div class="form"><div class="form-grid"><div class="field full"><label>Atlet</label><select id="eAthlete">${db.athletes.map(x=>`<option ${a.athlete===x.name?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div><div class="field"><label>Game</label><select id="eGame">${db.games.map(g=>`<option ${String(a.game||'').startsWith(g.name)?'selected':''}>${esc(g.name)}</option>`).join('')}</select></div><div class="field"><label>Kategori</label><select id="eCat"><option>Solo</option><option>Berkumpulan</option><option>Berkumpulan Lelaki</option><option>Berkumpulan Wanita</option><option>Duo</option></select></div><div class="field"><label>Kelayakan</label><select id="eQual">${['🌐 Antarabangsa','🏳️ Negeri','📍 Daerah','🏢 Kelab/Persatuan','👥 Komuniti'].map(x=>`<option ${a.qual===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Kedudukan</label><select id="eRank">${['🥇 Johan','🥈 Naib Johan','🥉 Tempat Ketiga','4️⃣ Top 4','8️⃣ Top 8','1️⃣6️⃣ Top 16','🏅 Penyertaan'].map(x=>`<option ${a.rank===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Tahun</label><input id="eYear" type="number" value="${a.year||2026}"></div><div class="field full"><label>Nama Pertandingan</label><input id="eEvent" value="${esc(a.event)}"></div><div class="field full"><label>Catatan</label><textarea id="eNote">${esc(a.note)}</textarea></div></div></div><div class="modal-actions"><button class="btn" onclick="closeModal()">Batal</button><button class="btn primary" onclick="saveAchievement('${id}')">💾 Simpan</button></div>`)}
+function saveAchievement(id){let obj={id:id||'ACH-'+Date.now(),athlete:document.getElementById('eAthlete').value,game:document.getElementById('eGame').value+' · '+document.getElementById('eCat').value,qual:document.getElementById('eQual').value,rank:document.getElementById('eRank').value,year:+document.getElementById('eYear').value||2026,event:document.getElementById('eEvent').value.trim(),note:document.getElementById('eNote').value.trim()};db.achievements=id?db.achievements.map(x=>x.id===id?obj:x):[...db.achievements,obj];closeModal();syncMutation('upsert',{type:'achievement',record:JSON.stringify(obj)});}
+function renderAchievements(){let body=document.getElementById('achievementTableBody');if(!body)return;let q=document.getElementById('qualFilter')?.value||'',r=document.getElementById('rankFilter')?.value||'';body.innerHTML=db.achievements.filter(a=>(!q||a.qual===q)&&(!r||a.rank===r)).map(a=>`<tr><td>${esc(a.athlete)}</td><td>${esc(a.game)}</td><td>${esc(a.qual)}</td><td>${esc(a.rank)}</td><td>${esc(a.year)}</td><td>${esc(a.event||'-')}</td><td><div class="row-actions"><button class="btn small" onclick="openAchievement('${a.id}')">Edit</button><button class="btn small danger" onclick="confirmDelete('achievement','${a.id}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Tiada pencapaian.</td></tr>'}
+function renderElite(){let el=document.getElementById('eliteCards');if(!el)return;let a=db.athletes.filter(x=>x.pro==='Ya — Pro Atlet');el.innerHTML=a.map(x=>`<div class="card game"><span class="pill">🏅 PRO ATLET</span><h3>${esc(x.name)}</h3><p class="muted">${(x.games||[]).map(esc).join(' · ')}</p><div class="row-actions"><button class="btn small" onclick="openAthlete('${x.id}')">Edit</button><button class="btn small danger" onclick="confirmDelete('athlete','${x.id}')">Delete</button></div></div>`).join('')||'<div class="card empty">Tiada atlet elit.</div>'}
+function renderDashboard(){document.getElementById('statAthletes').textContent=db.athletes.length;document.getElementById('statCoaches').textContent=db.coaches.length;document.getElementById('statManagement').textContent=db.management.length;document.getElementById('statGames').textContent=db.games.length;document.getElementById('dashboardGames').innerHTML=db.games.map(g=>`<div class="athlete"><div class="avatar">${g.icon||'🎮'}</div><div><b>${esc(g.name)}</b><br><span class="muted">${esc(g.category)}</span></div></div>`).join('');document.getElementById('dashboardElite').innerHTML=db.athletes.filter(x=>x.pro==='Ya — Pro Atlet').map(x=>`<div class="athlete"><div class="avatar">🏅</div><div><b>${esc(x.name)}</b><br><span class="muted">${(x.games||[]).map(esc).join(' · ')}</span></div></div>`).join('')||'<div class="empty">Tiada atlet elit.</div>'}
+function renderAnalytics(){let counts={'🥇 Johan':0,'🥈 Naib Johan':0,'🥉 Tempat Ketiga':0,'🏅 Penyertaan':0};db.achievements.forEach(a=>{if(counts[a.rank]!==undefined)counts[a.rank]++});document.getElementById('aGold').textContent=counts['🥇 Johan'];document.getElementById('aSilver').textContent=counts['🥈 Naib Johan'];document.getElementById('aBronze').textContent=counts['🥉 Tempat Ketiga'];document.getElementById('aEntries').textContent=counts['🏅 Penyertaan'];let q=['🌐 Antarabangsa','🏳️ Negeri','📍 Daerah','🏢 Kelab/Persatuan','👥 Komuniti'];document.getElementById('qualBars').innerHTML=q.map(x=>{let n=db.achievements.filter(a=>a.qual===x).length,p=db.achievements.length?Math.round(n/db.achievements.length*100):0;return `<div class="bar"><label><span>${x}</span><b>${n}</b></label><div class="track"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
+function renderAll(){renderDashboard();renderAthletes();renderPeople('coach');renderPeople('management');renderElite();renderGames();renderAchievements();renderAnalytics()}
+function exportJSON(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='esports-labuan-database-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function clearAll(){if(!confirm('AMARAN: Padam SEMUA data database?'))return;db=structuredClone(defaultData);syncMutation('replaceAll',{data:JSON.stringify(db)});toast('Database dipulihkan kepada data asas')}
+function importExcel(){let file=document.getElementById('excelFile').files[0];if(!file)return toast('Pilih fail Excel dahulu');let reader=new FileReader();reader.onload=e=>{try{let wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'}),ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});let headers=rows[2]||[];let ix={};headers.forEach((h,i)=>ix[String(h).trim().toUpperCase()]=i);let clean=s=>String(s??'').trim();let get=(row,names)=>{for(let n of names){let k=Object.keys(ix).find(x=>x.includes(n));if(k)return clean(row[ix[k]])}return''};let imported=0;for(let i=3;i<rows.length;i++){let row=rows[i];let role=get(row,['NOTE','JENIS']);let name=get(row,['NAMA PENUH']);let ic=get(row,['NO KAD PENGENALAN']);if(!name||!ic)continue;let game=get(row,['JENIS ESUKAN']);let email=get(row,['EMAIL']),phone=get(row,['NO TELEFON']),school=get(row,['NAMA SEKOLAH']),status=get(row,['STATUS DATA'])||'SEMAKAN';let type=role.toUpperCase();if(type.includes('ATLET')){let ex=db.athletes.find(a=>a.ic.replace(/\D/g,'')===ic.replace(/\D/g,''));let obj={id:ex?.id||nextId('ATH-',db.athletes),name,ic:fmtIC(ic),games:game?[normalizeGame(game)]:[],status:'🟢 Aktif',pro:'Tidak',gender:'Lelaki',email,phone,school,address:get(row,['ALAMAT PENUH']),ign:get(row,['IGN']),shirt:get(row,['SAIZ BAJUI']),pants:get(row,['SAIZ SELUAR']),dataStatus:status};let z=calcDobAge(ic);obj.dob=z.dob;obj.age=z.age;if(ex)db.athletes=db.athletes.map(a=>a.id===ex.id?{...a,...obj}:a);else db.athletes.push(obj);imported++}else if(type.includes('JURULATIH')){let ex=db.coaches.find(a=>a.ic.replace(/\D/g,'')===ic.replace(/\D/g,''));let obj={id:ex?.id||nextId('COA-',db.coaches),role,name,ic:fmtIC(ic),game:game||'',email,phone,school,status};if(ex)db.coaches=db.coaches.map(a=>a.id===ex.id?obj:a);else db.coaches.push(obj);imported++}else if(type.includes('PENGURUS')){let ex=db.management.find(a=>a.ic.replace(/\D/g,'')===ic.replace(/\D/g,''));let obj={id:ex?.id||nextId('MGT-',db.management),role,name,ic:fmtIC(ic),email,phone,school,status};if(ex)db.management=db.management.map(a=>a.id===ex.id?obj:a);else db.management.push(obj);imported++}}syncMutation('replaceAll',{data:JSON.stringify(db)});toast(`Import selesai: ${imported} rekod diproses.`)}catch(err){console.error(err);toast('Import gagal. Pastikan fail Excel menggunakan format database peserta.')}};reader.readAsArrayBuffer(file)}
+function normalizeGame(g){g=g.toUpperCase();if(g.includes('MOBILE LEGENDS'))return 'MLBB';if(g.includes('TEKKEN'))return 'Tekken 7';if(g.includes('EFOOTBALL KONSOL'))return 'eFootball Konsol';if(g.includes('EFOOTBALL MOBILE'))return 'eFootball Mobile';if(g.includes('GRAN TURISMO'))return 'Gran Turismo 7';if(g==='FC')return 'FC';if(g.includes('PUBG'))return 'PUBG Mobile';return g}
+document.getElementById('globalSearch').addEventListener('input',e=>{let q=e.target.value.toLowerCase();document.querySelectorAll('#athleteTableBody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')})
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+renderAll();updateApiStatus();syncFromGoogle();
+</script>
+</body>
+</html>
